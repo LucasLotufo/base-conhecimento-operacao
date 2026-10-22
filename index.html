@@ -236,7 +236,7 @@
         </aside>
        </div>
        <div class="flex flex-wrap items-center gap-3 mt-8">
-        <button type="submit" id="save-button" data-template-id="save-button-label" class="canva-button action-btn" style="background: rgb(237, 243, 248); color: rgb(40, 67, 92); font-weight: 700; font-style: normal; font-size: 16px;">Salvar rascunho</button><button type="button" id="publish-button" data-template-id="publish-button-label" class="canva-button action-btn" style="background: rgb(25, 119, 230); color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">Publicar tutorial</button>
+        <button type="submit" id="save-button" data-template-id="save-button-label" class="canva-button action-btn" style="background: rgb(237, 243, 248); color: rgb(40, 67, 92); font-weight: 700; font-style: normal; font-size: 16px;">Salvar rascunho</button><button type="button" id="publish-button" data-template-id="publish-button-label" class="canva-button action-btn" style="background: rgb(25, 119, 230); color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">Publicar tutorial</button><button type="button" id="duplicate-button" class="canva-button muted-button" style="background:#fff;color:#1977e6;border:1px solid #a9c9e9;font-weight:700;font-size:16px;" hidden>⧉ Duplicar tutorial</button>
        </div>
        <p data-template-id="session-note" class="canva-text mt-4" style="color: rgb(96, 112, 132); font-weight: 400; font-style: normal; font-size: 14px;">Imagens e vídeos são enviados ao bucket Procedimentos no Supabase Storage. Vídeos de até 20 MB são aceitos.</p>
        <p id="editor-status" class="status mt-4" role="status" hidden=""></p>
@@ -526,6 +526,7 @@
   function editor(id=null){
     if(!adminSession){notice('library-status','Entre como administrador para criar ou editar tutoriais.',true);return}
     if(busy)return;activeId=id;const item=records.get(id);
+    $('duplicate-button').hidden=!item || !!item.deleted;
     $('edit-title').value=item?.title || '';$('edit-description').value=item?.description || '';
     $('edit-category').value=item?.category || 'windows';$('edit-level').value=item?.level || 'Iniciante';
     $('edit-time').value=item?.time || '';$('steps-list').replaceChildren();
@@ -571,7 +572,7 @@
       steps:JSON.stringify({items:item.steps,cover:item.cover,video:item.video,videoName:item.videoName,videoType:item.videoType,baseId:item.baseId,deleted:item.deleted}),
       published:item.published};
   }
-  function setBusy(value){busy=value;['save-button','publish-button','reader-delete-confirm'].forEach(id=>$(id).disabled=value)}
+  function setBusy(value){busy=value;['save-button','publish-button','duplicate-button','reader-delete-confirm'].forEach(id=>$(id).disabled=value)}
   async function write(item,publish){
     if(!adminSession){notice('editor-status','Entre como administrador antes de salvar tutoriais.',true);return}
     if(busy)return;
@@ -596,6 +597,45 @@
       else notice('editor-status','Rascunho salvo no Supabase e disponível ao reabrir a página.');
     }catch(error){console.error('Falha ao salvar tutorial/anexos:',error);notice('editor-status','Não foi possível salvar. Confira se o bucket Procedimentos existe e se as políticas de Storage permitem leitura e envio para administradores. Seus dados continuam no formulário.',true)}
     finally{setBusy(false)}
+  }
+  // Cria um registro independente no banco, usando os valores atuais do editor.
+  // Os arquivos já enviados permanecem referenciados; novas mídias são enviadas ao Storage.
+  async function duplicateTutorial(){
+    if(!adminSession){notice('editor-status','Entre como administrador para duplicar tutoriais.',true);return}
+    if(busy)return;
+    if(!ready){notice('editor-status','Aguarde os tutoriais carregarem antes de duplicar.',true);return}
+    const original=records.get(activeId);
+    if(!original || original.deleted){notice('editor-status','Abra um tutorial existente para duplicá-lo.',true);return}
+    const copy=collect(false);
+    copy.title=('Cópia de '+(copy.title || 'Tutorial')).slice(0,160);
+    copy.backend=null;
+    copy.baseId='';
+    copy.published=false;
+    copy.deleted=false;
+    setBusy(true);
+    notice('editor-status','Criando cópia como rascunho no Supabase...');
+    let newId=null;
+    try{
+      copy.cover=await persistMedia(copy.cover,'capa','image/jpeg');
+      copy.video=await persistMedia(copy.video,'video',copy.videoType || 'video/mp4');
+      copy.steps=await Promise.all(copy.steps.map(async(step,index)=>({...step,image:await persistMedia(step.image,`passo-${index+1}`,'image/jpeg')})));
+      // Não usa o ID/backend do original: força INSERT, nunca UPDATE.
+      const {data,error}=await window.supabaseClient.from('tutorials').insert(serialize(copy)).select('id').single();
+      if(error)throw error;
+      newId=data?.id;
+      await window.dataSdk.refresh();
+    }catch(error){
+      console.error('Falha ao duplicar tutorial:',error);
+      notice('editor-status','Não foi possível duplicar o tutorial. Confira suas permissões no Supabase e tente novamente. O original não foi alterado.',true);
+      return;
+    }finally{setBusy(false)}
+    if(newId && records.has(newId)){
+      editor(newId);
+      notice('editor-status','Cópia criada como rascunho no Supabase. O tutorial original não foi alterado. Edite e publique a cópia quando quiser.');
+    }else{
+      home();
+      notice('library-status','Cópia salva como rascunho no Supabase. Abra o novo tutorial na biblioteca para editar.');
+    }
   }
   function home(){show('home-view');updateCards()}
   function fileData(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error('Falha ao ler arquivo'));reader.readAsDataURL(file)})}
@@ -667,6 +707,7 @@
   $('remove-video').onclick=()=>{videoData='';videoName='';videoType='';$('video-file').value='';mediaPreview()};
   $('editor-form').addEventListener('submit',event=>{event.preventDefault();write(collect(records.get(activeId)?.published || false),false)});
   $('publish-button').onclick=()=>write(collect(true),true);
+  $('duplicate-button').onclick=duplicateTutorial;
   if(window.lucide)lucide.createIcons();
   sync([]);notice('library-status','Carregando tutoriais salvos...');init();
 })();
