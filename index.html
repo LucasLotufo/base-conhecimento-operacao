@@ -33,8 +33,6 @@
     .open-btn{display:flex;align-items:center;justify-content:space-between;width:100%;border:0;border-top:1px solid var(--line);padding:16px 22px;background:#fff;color:var(--blue);font-weight:700;text-align:left;cursor:pointer}
     .open-btn:hover{background:#f0f7ff}.detail-shell{padding:42px 0 80px}
     .detail-panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:clamp(22px,4vw,42px);box-shadow:0 17px 50px #1c33400d}
-    #reader-title{font-size:clamp(30px,4vw,38px);font-weight:700;line-height:1.2}
-    #reader-cover{display:none!important}
     .detail-grid{display:grid;grid-template-columns:minmax(280px,.9fr) minmax(0,1.4fr);gap:32px}
     .detail-box{border:1px solid var(--line);border-radius:14px;padding:30px;background:#fff}
     .cover-panel{grid-column:2}.steps-panel{grid-column:1;grid-row:1 / span 2}.video-panel{grid-column:2}
@@ -63,7 +61,7 @@
   <div class="app-wrap">
    <header data-template-id="site-header" class="canva-header site-header" style="background: rgb(255, 255, 255);">
     <div class="page-inner flex flex-wrap items-center justify-between gap-4 py-5"><a href="#inicio" id="brand-link" class="flex items-center gap-3 no-underline" aria-label="Tutoriais de TI — início"> <img data-template-id="brand-logo" class="canva-image brand-mark" loading="lazy" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/book-open.svg" alt="Ícone da marca Tutoriais de TI"> <span data-template-id="brand-name" class="canva-text font-bold" style="color: rgb(23, 38, 56); font-weight: 700; font-style: normal; font-size: 19px;">Base de conhecimento - Operação</span> </a>
-     <nav aria-label="Navegação principal" class="flex flex-wrap items-center gap-4 sm:gap-7"><a data-template-id="nav-categories" class="canva-link nav-link" href="#categorias" style="color: rgb(69, 89, 109); font-weight: 400; font-style: normal; font-size: 16px;">Categorias</a> <a data-template-id="nav-tutorials" class="canva-link nav-link" href="#tutoriais" style="color: rgb(69, 89, 109); font-weight: 400; font-style: normal; font-size: 16px;">Tutoriais</a> <a data-template-id="nav-sites" class="canva-link nav-link" href="#sites" style="color: rgb(69, 89, 109); font-weight: 700; font-style: normal; font-size: 16px;">Sites</a> <button type="button" id="nav-create" data-template-id="nav-create-label" class="canva-button primary-btn" style="background: rgb(25, 119, 230); color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">＋ Criar tutorial</button> <button type="button" id="admin-auth" class="canva-button muted-button" style="font-size:14px;">Entrar (admin)</button>
+     <nav aria-label="Navegação principal" class="flex flex-wrap items-center gap-4 sm:gap-7"><a data-template-id="nav-categories" class="canva-link nav-link" href="#categorias" style="color: rgb(69, 89, 109); font-weight: 400; font-style: normal; font-size: 16px;">Categorias</a> <a data-template-id="nav-tutorials" class="canva-link nav-link" href="#tutoriais" style="color: rgb(69, 89, 109); font-weight: 400; font-style: normal; font-size: 16px;">Tutoriais</a> <a data-template-id="nav-sites" class="canva-link nav-link" href="#sites-section" style="color: rgb(69, 89, 109); font-weight: 700; font-style: normal; font-size: 16px;">Sites</a> <button type="button" id="nav-create" data-template-id="nav-create-label" class="canva-button primary-btn" style="background: rgb(25, 119, 230); color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">＋ Criar tutorial</button> <button type="button" id="admin-auth" class="canva-button muted-button" style="font-size:14px;">Entrar (admin)</button>
      </nav>
     </div>
    </header>
@@ -249,7 +247,29 @@
      </div>
     </section>
    </main>
-   <footer id="sites" data-template-id="site-footer" class="canva-footer" style="background: rgb(16, 29, 44);">
+   
+<section id="sites-section" class="page-inner py-16" aria-labelledby="sites-title">
+  <div class="canva-panel p-6 md:p-8" style="background:#fff;border-radius:16px">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div><p class="eyebrow mb-2" style="color:#1977e6;font-weight:700">ATALHOS DA OPERAÇÃO</p>
+      <h2 id="sites-title" class="display-title" style="font-size:28px;font-weight:700">Sites úteis</h2>
+      <p class="mt-2" style="color:#607084">Cadastre e organize links usados no dia a dia.</p></div>
+      <button type="button" id="sites-add" class="canva-button primary-btn" style="background:#1977e6;color:white;font-weight:700;padding:12px 18px;border-radius:8px">+ Adicionar novo site</button>
+    </div>
+    <form id="sites-form" class="mt-6 grid gap-4 md:grid-cols-2" hidden>
+      <input type="hidden" id="site-id">
+      <label class="block font-bold">Nome do site *<input id="site-name" class="canva-input field mt-2" required maxlength="120" placeholder="Ex.: Portal de chamados"></label>
+      <label class="block font-bold">URL *<input id="site-url" class="canva-input field mt-2" required type="url" placeholder="https://exemplo.com"></label>
+      <label class="block font-bold">Categoria<input id="site-category" class="canva-input field mt-2" maxlength="80" placeholder="Ex.: Monitoramento"></label>
+      <label class="block font-bold">Descrição<input id="site-description" class="canva-input field mt-2" maxlength="300" placeholder="Para que serve este site"></label>
+      <div class="md:col-span-2 flex flex-wrap gap-3"><button id="site-save" type="submit" class="canva-button primary-btn" style="background:#1977e6;color:white;font-weight:700;padding:10px 16px;border-radius:8px">Salvar site</button><button id="site-cancel" type="button" class="canva-button muted-button" style="padding:10px 16px;border-radius:8px">Cancelar</button></div>
+    </form>
+    <p id="sites-status" class="mt-4" role="status" aria-live="polite"></p>
+    <div id="sites-list" class="mt-6 grid gap-4 md:grid-cols-2"></div>
+  </div>
+</section>
+
+   <footer id="site-footer" data-template-id="site-footer" class="canva-footer" style="background: rgb(16, 29, 44);">
     <div class="page-inner py-8 flex flex-wrap items-center justify-between gap-3">
      <p data-template-id="footer-name" class="canva-text font-bold" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">Lucas Lotufo</p>
      <p data-template-id="footer-note" class="canva-text" style="color: rgb(184, 200, 216); font-weight: 400; font-style: normal; font-size: 14px;">Conhecimento prático para infraestrutura e tecnologia.</p>
@@ -291,6 +311,7 @@
   const SUPABASE_ANON_KEY = 'sb_publishable_hH__nHHIZUGb-z3l9jBg9A_c1B49Gkx';
   const supabaseConfigured = SUPABASE_URL.startsWith('https://') && SUPABASE_ANON_KEY.startsWith('sb_publishable_');
   const supabaseClient = supabaseConfigured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+  window.supabaseClient = supabaseClient;
   window.supabaseClient = supabaseClient;
   window.dataSdk = {
     _handler: null,
@@ -442,10 +463,7 @@
       card.querySelector('[data-template-id="new-card-description"]').textContent=item.description || 'Continue editando este tutorial.';
       card.querySelector('[data-template-id="new-card-level"]').textContent=item.level;
       card.querySelector('[data-template-id="new-card-time"]').textContent=item.published?item.time:'Rascunho';
-      const openButton=card.querySelector('.open-btn');
-      openButton.textContent=item.published?'Abrir tutorial →':'Continuar edição →';
-      openButton.setAttribute('aria-label',(item.published?'Abrir tutorial: ':'Continuar edição: ')+(item.title || 'sem título'));
-      openButton.onclick=()=>item.published?reader(id):editor(id);
+      card.querySelector('.open-btn').onclick=()=>item.published?reader(id):editor(id);
     }
     [...grid.querySelectorAll('[data-dynamic="true"]')].forEach(card=>{
       const item=records.get(card.dataset.key);
@@ -513,8 +531,8 @@
     $('reader-category').textContent=categories[item.category] || categories.other;
     $('reader-title').textContent=item.title;$('reader-description').textContent=item.description;
     $('reader-level').textContent=item.level;$('reader-time').textContent=item.time;
-    // A capa continua salva no cadastro e no Storage, mas não é exibida na leitura do tutorial.
-    $('reader-cover').hidden=true;$('reader-cover').style.backgroundImage='';
+    $('reader-cover').hidden=!item.cover;$('reader-cover').style.backgroundImage='';
+    if(item.cover){const url=await mediaUrl(item.cover);if(url) $('reader-cover').style.backgroundImage=`url("${url}")`;}
     $('reader-video-wrap').hidden=!item.video;$('reader-player').src=await mediaUrl(item.video) || '';
     $('reader-steps').replaceChildren();
     for(const [index,step] of item.steps.entries()){
@@ -647,4 +665,64 @@
 })();
 </script>
  
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const form = $('sites-form'), list = $('sites-list'), status = $('sites-status');
+  if (!form || !list) return;
+  let sites = [];
+  const say = (message, bad=false) => { status.textContent=message; status.style.color=bad?'#b42318':'#607084'; };
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function resetForm(){form.reset();$('site-id').value='';form.hidden=true;$('sites-add').hidden=false;}
+  function render(){
+    list.innerHTML = sites.length ? sites.map(site => `<article class="canva-card p-5" style="border:1px solid #dce5ed;border-radius:12px;background:#fff">
+      <div class="flex items-start justify-between gap-3"><div><h3 style="font-weight:700;font-size:18px">${esc(site.name)}</h3><p class="mt-1" style="color:#607084;font-size:13px">${esc(site.category||'Sem categoria')}</p></div></div>
+      ${site.description?`<p class="mt-3" style="color:#45596d">${esc(site.description)}</p>`:''}
+      <div class="mt-4 flex flex-wrap gap-3"><a href="${esc(site.url)}" target="_blank" rel="noopener noreferrer" class="canva-button primary-btn" style="background:#1977e6;color:white;padding:9px 14px;border-radius:8px;text-decoration:none">Abrir site ↗</a>
+      <button type="button" data-edit="${esc(site.id)}" class="canva-button muted-button" style="padding:9px 14px;border-radius:8px">Editar</button><button type="button" data-delete="${esc(site.id)}" class="canva-button muted-button" style="padding:9px 14px;border-radius:8px">Excluir</button></div></article>`).join('') : '<p style="color:#607084">Nenhum site cadastrado ainda. Clique em “Adicionar novo site” para começar.</p>';
+  }
+  async function load(){
+    if (!window.supabaseClient) { say('A conexão com o Supabase não foi inicializada nesta página.',true); return; }
+    say('Carregando sites...');
+    try {
+      const {data,error}=await window.supabaseClient.from('sites').select('*').order('created_at',{ascending:false});
+      if(error) throw error;
+      sites=data||[];render();say(`${sites.length} site(s) carregado(s).`);
+    } catch(e) { console.error(e);say('Não foi possível carregar os sites. Confira se executou o SQL e configurou as permissões da tabela sites no Supabase.',true); }
+  }
+  $('sites-add').addEventListener('click',()=>{form.reset();$('site-id').value='';form.hidden=false;$('sites-add').hidden=true;$('site-name').focus();});
+  $('site-cancel').addEventListener('click',resetForm);
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const name=$('site-name').value.trim(), rawUrl=$('site-url').value.trim();
+    let url; try {url=new URL(rawUrl); if(!['http:','https:'].includes(url.protocol)) throw Error();} catch {say('Informe uma URL válida começando com https:// ou http://.',true);return;}
+    const payload={name,url:url.href,category:$('site-category').value.trim(),description:$('site-description').value.trim()};
+    const id=$('site-id').value;
+    $('site-save').disabled=true;say('Salvando site...');
+    try {
+      const result=id ? await window.supabaseClient.from('sites').update(payload).eq('id',id) : await window.supabaseClient.from('sites').insert(payload);
+      if(result.error) throw result.error;
+      resetForm();await load();say('Site salvo com sucesso.');
+    } catch(err) {console.error(err);say('Não foi possível salvar. Confira a tabela sites e as políticas de acesso no Supabase.',true);}
+    finally {$('site-save').disabled=false;}
+  });
+  list.addEventListener('click',async e=>{
+    const edit=e.target.closest('[data-edit]'), del=e.target.closest('[data-delete]');
+    if(edit){const site=sites.find(x=>String(x.id)===edit.dataset.edit);if(!site)return;
+      $('site-id').value=site.id;$('site-name').value=site.name||'';$('site-url').value=site.url||'';$('site-category').value=site.category||'';$('site-description').value=site.description||'';form.hidden=false;$('sites-add').hidden=true;$('site-name').focus();return;}
+    if(del){const site=sites.find(x=>String(x.id)===del.dataset.delete);if(!site||!confirm(`Excluir o site "${site.name}"?`))return;
+      say('Excluindo site...');
+      try{const {error}=await window.supabaseClient.from('sites').delete().eq('id',site.id);if(error)throw error;await load();say('Site excluído.');}
+      catch(err){console.error(err);say('Não foi possível excluir. Confira as permissões da tabela sites.',true);}
+    }
+  });
+  const nav = document.querySelector('a[href="#sites-section"]');
+  if(nav) nav.addEventListener('click',()=>setTimeout(load,100));
+  $('sites-add').addEventListener('click',()=>{});
+  // Supabase client created by the original app is exposed for this section only.
+  load();
+})();
+</script>
+
 </body></html>
