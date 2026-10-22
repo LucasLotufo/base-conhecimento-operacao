@@ -232,7 +232,7 @@
        <div class="flex flex-wrap items-center gap-3 mt-8">
         <button type="submit" id="save-button" data-template-id="save-button-label" class="canva-button action-btn" style="background: rgb(237, 243, 248); color: rgb(40, 67, 92); font-weight: 700; font-style: normal; font-size: 16px;">Salvar rascunho</button><button type="button" id="publish-button" data-template-id="publish-button-label" class="canva-button action-btn" style="background: rgb(25, 119, 230); color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">Publicar tutorial</button>
        </div>
-       <p data-template-id="session-note" class="canva-text mt-4" style="color: rgb(96, 112, 132); font-weight: 400; font-style: normal; font-size: 14px;">Tutoriais são salvos no Supabase. Para acompanhar o tutorial, o vídeo deve ter até 600 KB; arquivos maiores não serão selecionados.</p>
+       <p data-template-id="session-note" class="canva-text mt-4" style="color: rgb(96, 112, 132); font-weight: 400; font-style: normal; font-size: 14px;">Imagens e vídeos são enviados ao bucket Procedimentos no Supabase Storage. Vídeos de até 20 MB são aceitos.</p>
        <p id="editor-status" class="status mt-4" role="status" hidden=""></p>
       </form>
      </div>
@@ -287,7 +287,7 @@
   // Nunca coloque a chave service_role/secret no navegador.
   const SUPABASE_URL = 'https://mtwpabmyocqbaatkbhke.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_hH__nHHIZUGb-z3l9jBg9A_c1B49Gkx';
-  const supabaseConfigured = SUPABASE_URL.startsWith('https://') && SUPABASE_ANON_KEY !== 'sb_publishable_hH__nHHIZUGb-z3l9jBg9A_c1B49Gk';
+  const supabaseConfigured = SUPABASE_URL.startsWith('https://') && SUPABASE_ANON_KEY.startsWith('sb_publishable_');
   const supabaseClient = supabaseConfigured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
   window.supabaseClient = supabaseClient;
   window.dataSdk = {
@@ -342,6 +342,25 @@
   const records = new Map();
   let activeId = null, activeCategory = '', ready = false, busy = false;
   let coverData = '', videoData = '', videoName = '', videoType = '';
+  const STORAGE_BUCKET = 'Procedimentos';
+  const STORAGE_PREFIX = 'sbstorage://';
+  async function mediaUrl(value){
+    if(!value) return '';
+    if(!value.startsWith(STORAGE_PREFIX)) return value;
+    const path=value.slice(STORAGE_PREFIX.length);
+    const {data,error}=await window.supabaseClient.storage.from(STORAGE_BUCKET).createSignedUrl(path,3600);
+    if(error){console.error('Não foi possível gerar link do anexo:',error.message);return '';}
+    return data?.signedUrl || '';
+  }
+  async function persistMedia(value,label,mime='application/octet-stream'){
+    if(!value || value.startsWith(STORAGE_PREFIX) || !value.startsWith('data:')) return value || '';
+    const response=await fetch(value);const blob=await response.blob();
+    const extension=(blob.type || mime).includes('webm')?'webm':(blob.type || mime).includes('ogg')?'ogv':(blob.type || mime).includes('mp4')?'mp4':'jpg';
+    const path=`tutorials/${crypto.randomUUID()}/${label}-${Date.now()}.${extension}`;
+    const {error}=await window.supabaseClient.storage.from(STORAGE_BUCKET).upload(path,blob,{contentType:blob.type || mime,upsert:false});
+    if(error) throw error;
+    return STORAGE_PREFIX+path;
+  }
   const views = ['home-view','reader-view','editor-view','success-view'];
   let adminSession = null;
   async function refreshAdminState(){
@@ -413,8 +432,9 @@
       if(!card)continue;
       card.dataset.category=item.category;
       const art=card.querySelector('.tutorial-placeholder');
-      art.style.backgroundImage=item.cover?`url("${item.cover}")`:'';
+      art.style.backgroundImage='';
       art.textContent=item.cover?'':'▦';
+      if(item.cover) mediaUrl(item.cover).then(url=>{if(url && records.get(id)===item && art.isConnected) art.style.backgroundImage=`url("${url}")`;});
       card.querySelector('[data-template-id="new-card-category"]').textContent=categories[item.category] || categories.other;
       card.querySelector('[data-template-id="new-card-title"]').textContent=item.title || 'Rascunho sem título';
       card.querySelector('[data-template-id="new-card-description"]').textContent=item.description || 'Continue editando este tutorial.';
@@ -439,10 +459,12 @@
     });
     $('steps-empty').hidden=!!$('steps-list').children.length;
   }
-  function renderStepMedia(row){
-    const hasImage=!!row.stepImage;
+  async function renderStepMedia(row){
+    const value=row.stepImage || '';
+    const hasImage=!!value;
     row.querySelector('.step-preview-wrap').hidden=!hasImage;
-    row.querySelector('.step-preview').style.backgroundImage=hasImage?`url("${row.stepImage}")`:'';
+    row.querySelector('.step-preview').style.backgroundImage='';
+    if(hasImage){const url=await mediaUrl(value);if(url && row.isConnected) row.querySelector('.step-preview').style.backgroundImage=`url("${url}")`;}
   }
   function addStep(value={text:'',image:''}){
     const step=normalizeStep(value),fragment=$('step-template').content.cloneNode(true),row=fragment.querySelector('.step-row');
@@ -462,10 +484,11 @@
     $('steps-list').appendChild(fragment);renderStepMedia(row);renumber();
     return row.querySelector('textarea');
   }
-  function mediaPreview(){
-    $('cover-preview').style.backgroundImage=coverData?`url("${coverData}")`:'';
+  async function mediaPreview(){
+    $('cover-preview').style.backgroundImage='';
     $('cover-preview-wrap').hidden=!coverData;$('cover-empty').hidden=!!coverData;
-    $('preview-player').src=videoData || '';$('video-filename').textContent=videoName;
+    if(coverData){const url=await mediaUrl(coverData);if(url) $('cover-preview').style.backgroundImage=`url("${url}")`;}
+    $('preview-player').src=await mediaUrl(videoData) || ''; $('video-filename').textContent=videoName;
     $('video-preview').hidden=!videoData;$('video-empty').hidden=!!videoData;
   }
   function editor(id=null){
@@ -479,28 +502,30 @@
     $('cover-file').value='';$('video-file').value='';mediaPreview();
     $('video-error').hidden=true;$('editor-status').hidden=true;show('editor-view');$('edit-title').focus({preventScroll:true});
   }
-  function reader(id){
+  async function reader(id){
     const item=records.get(id);if(!item || item.deleted)return;activeId=id;
     $('reader-delete').hidden=false;$('reader-delete-confirm').hidden=true;$('reader-delete-cancel').hidden=true;$('reader-status').hidden=true;
     $('reader-category').textContent=categories[item.category] || categories.other;
     $('reader-title').textContent=item.title;$('reader-description').textContent=item.description;
     $('reader-level').textContent=item.level;$('reader-time').textContent=item.time;
-    $('reader-cover').hidden=!item.cover;$('reader-cover').style.backgroundImage=item.cover?`url("${item.cover}")`:'';
-    $('reader-video-wrap').hidden=!item.video;$('reader-player').src=item.video || '';
+    $('reader-cover').hidden=!item.cover;$('reader-cover').style.backgroundImage='';
+    if(item.cover){const url=await mediaUrl(item.cover);if(url) $('reader-cover').style.backgroundImage=`url("${url}")`;}
+    $('reader-video-wrap').hidden=!item.video;$('reader-player').src=await mediaUrl(item.video) || '';
     $('reader-steps').replaceChildren();
-    item.steps.forEach((step,index)=>{
+    for(const [index,step] of item.steps.entries()){
       const row=document.createElement('div');row.className='read-step';
       const number=document.createElement('span');number.className='step-number';number.textContent=index+1;
       const content=document.createElement('div');content.className='min-w-0';
       const text=document.createElement('p');text.className='read-text';text.textContent=step.text;content.appendChild(text);
       if(step.image){
         const image=document.createElement('div');image.className='read-image bg-center bg-contain bg-no-repeat';
-        image.style.height='min(460px, 60vw)';image.style.backgroundImage=`url("${step.image}")`;
+        image.style.height='min(460px, 60vw)';
         image.setAttribute('role','img');image.setAttribute('aria-label','Imagem do passo '+(index+1));
         content.appendChild(image);
+        const url=await mediaUrl(step.image);if(url) image.style.backgroundImage=`url("${url}")`;
       }
       row.append(number,content);$('reader-steps').appendChild(row);
-    });
+    }
     show('reader-view');$('reader-back').focus({preventScroll:true});
   }
   function collect(published){
@@ -530,12 +555,16 @@
     if(!item.backend && records.size>=999){notice('editor-status','Limite de 999 tutoriais atingido. Exclua um tutorial antes de criar outro.',true);return}
     setBusy(true);notice('editor-status','Salvando tutorial no Supabase...');
     try{
-      const payload=serialize(item);
+      const storedItem={...item};
+      storedItem.cover=await persistMedia(item.cover,'capa','image/jpeg');
+      storedItem.video=await persistMedia(item.video,'video',item.videoType || 'video/mp4');
+      storedItem.steps=await Promise.all(item.steps.map(async(step,index)=>({...step,image:await persistMedia(step.image,`passo-${index+1}`,'image/jpeg')})));
+      const payload=serialize(storedItem);
       const result=item.backend?await window.dataSdk.update({...item.backend,...payload}):await window.dataSdk.create(payload);
       if(!result.isOk)throw result.error;
       if(publish){show('success-view');$('success-home').focus({preventScroll:true})}
       else notice('editor-status','Rascunho salvo no Supabase e disponível ao reabrir a página.');
-    }catch{notice('editor-status','Não foi possível salvar o tutorial. Seus dados continuam no formulário; tente novamente ou use imagens menores.',true)}
+    }catch(error){console.error('Falha ao salvar tutorial/anexos:',error);notice('editor-status','Não foi possível salvar. Confira se o bucket Procedimentos existe e se as políticas de Storage permitem leitura e envio para administradores. Seus dados continuam no formulário.',true)}
     finally{setBusy(false)}
   }
   function home(){show('home-view');updateCards()}
@@ -597,8 +626,8 @@
   $('remove-cover').onclick=()=>{coverData='';$('cover-file').value='';mediaPreview()};
   $('video-file').addEventListener('change',async event=>{
     const file=event.target.files[0];if(!file)return;
-    if(!['video/mp4','video/webm','video/ogg'].includes(file.type) || file.size>600000){
-      $('video-error').textContent='Selecione um vídeo MP4, WebM ou Ogg de até 600 KB para salvá-lo com o tutorial.';
+    if(!['video/mp4','video/webm','video/ogg'].includes(file.type) || file.size>20000000){
+      $('video-error').textContent='Selecione um vídeo MP4, WebM ou Ogg de até 20 MB para enviá-lo ao armazenamento do Supabase.';
       $('video-error').hidden=false;event.target.value='';return;
     }
     try{const data=await fileData(file);videoData=data;videoName=file.name;videoType=file.type;$('video-error').hidden=true;mediaPreview()}
