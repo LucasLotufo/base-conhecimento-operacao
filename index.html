@@ -463,7 +463,10 @@
       card.querySelector('[data-template-id="new-card-description"]').textContent=item.description || 'Continue editando este tutorial.';
       card.querySelector('[data-template-id="new-card-level"]').textContent=item.level;
       card.querySelector('[data-template-id="new-card-time"]').textContent=item.published?item.time:'Rascunho';
-      card.querySelector('.open-btn').onclick=()=>item.published?reader(id):editor(id);
+      const openButton=card.querySelector('.open-btn');
+      openButton.textContent='Abrir tutorial →';
+      openButton.setAttribute('aria-label',`Abrir tutorial: ${item.title || 'Rascunho sem título'}`);
+      openButton.onclick=()=>item.published?reader(id):editor(id);
     }
     [...grid.querySelectorAll('[data-dynamic="true"]')].forEach(card=>{
       const item=records.get(card.dataset.key);
@@ -689,7 +692,7 @@
       const {data,error}=await window.supabaseClient.from('sites').select('*').order('created_at',{ascending:false});
       if(error) throw error;
       sites=data||[];render();say(`${sites.length} site(s) carregado(s).`);
-    } catch(e) { console.error(e);say('Não foi possível carregar os sites. Confira se executou o SQL e configurou as permissões da tabela sites no Supabase.',true); }
+    } catch(e) { console.error('Erro ao carregar sites do Supabase:',e);say(`Erro ao carregar sites: ${e.message || e.code || 'falha desconhecida'}. Verifique a tabela public.sites e as políticas RLS no Supabase.`,true); }
   }
   $('sites-add').addEventListener('click',()=>{form.reset();$('site-id').value='';form.hidden=false;$('sites-add').hidden=true;$('site-name').focus();});
   $('site-cancel').addEventListener('click',resetForm);
@@ -701,10 +704,13 @@
     const id=$('site-id').value;
     $('site-save').disabled=true;say('Salvando site...');
     try {
+      const {data:{session},error:sessionError}=await window.supabaseClient.auth.getSession();
+      if(sessionError) throw sessionError;
+      if(!session){say('Para cadastrar ou alterar sites, entre primeiro como administrador pelo botão “Entrar (admin)”.',true);return;}
       const result=id ? await window.supabaseClient.from('sites').update(payload).eq('id',id) : await window.supabaseClient.from('sites').insert(payload);
       if(result.error) throw result.error;
-      resetForm();await load();say('Site salvo com sucesso.');
-    } catch(err) {console.error(err);say('Não foi possível salvar. Confira a tabela sites e as políticas de acesso no Supabase.',true);}
+      resetForm();await load();say('Site salvo na base de dados com sucesso.');
+    } catch(err) {console.error('Erro ao salvar site no Supabase:',err);say(`Falha ao salvar site: ${err.message || err.code || 'erro desconhecido'}. Confira a tabela public.sites e as políticas RLS no Supabase.`,true);}
     finally {$('site-save').disabled=false;}
   });
   list.addEventListener('click',async e=>{
@@ -713,8 +719,8 @@
       $('site-id').value=site.id;$('site-name').value=site.name||'';$('site-url').value=site.url||'';$('site-category').value=site.category||'';$('site-description').value=site.description||'';form.hidden=false;$('sites-add').hidden=true;$('site-name').focus();return;}
     if(del){const site=sites.find(x=>String(x.id)===del.dataset.delete);if(!site||!confirm(`Excluir o site "${site.name}"?`))return;
       say('Excluindo site...');
-      try{const {error}=await window.supabaseClient.from('sites').delete().eq('id',site.id);if(error)throw error;await load();say('Site excluído.');}
-      catch(err){console.error(err);say('Não foi possível excluir. Confira as permissões da tabela sites.',true);}
+      try{const {data:{session},error:sessionError}=await window.supabaseClient.auth.getSession();if(sessionError)throw sessionError;if(!session){say('Entre como administrador para excluir sites.',true);return;}const {error}=await window.supabaseClient.from('sites').delete().eq('id',site.id);if(error)throw error;await load();say('Site excluído.');}
+      catch(err){console.error('Erro ao excluir site:',err);say(`Falha ao excluir site: ${err.message || err.code || 'erro desconhecido'}.`,true);}
     }
   });
   const nav = document.querySelector('a[href="#sites-section"]');
