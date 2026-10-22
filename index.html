@@ -285,9 +285,9 @@
   <script>
   // CONFIGURE A URL e a chave publicável (anon/publishable) do seu projeto Supabase.
   // Nunca coloque a chave service_role/secret no navegador.
-  const SUPABASE_URL = 'https://mtwpabmyocqbaatkbhke.supabase.co/rest/v1/';
+  const SUPABASE_URL = 'https://mtwpabmyocqbaatkbhke.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_hH__nHHIZUGb-z3l9jBg9A_c1B49Gkx';
-  const supabaseConfigured = SUPABASE_URL.startsWith('https://') && SUPABASE_ANON_KEY !== 'COLE_A_CHAVE_PUBLICA_ANON';
+  const supabaseConfigured = SUPABASE_URL.startsWith('https://') && SUPABASE_ANON_KEY !== 'sb_publishable_hH__nHHIZUGb-z3l9jBg9A_c1B49Gk';
   const supabaseClient = supabaseConfigured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
   window.supabaseClient = supabaseClient;
   window.dataSdk = {
