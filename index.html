@@ -30,6 +30,12 @@
     [hidden]{display:none!important}.tutorial-image{width:100%;height:165px;object-fit:cover;background:#d8e2eb}
     .tutorial-placeholder{height:165px;display:grid;place-items:center;background:linear-gradient(135deg,#152b43,#357cb5);color:#fff;font-size:50px;background-size:cover;background-position:center}
     .tutorial-content{padding:22px;display:flex;flex-direction:column;flex:1}.tutorial-desc{line-height:1.6}
+    /* Cartões novos usam a mesma tipografia e botão dos cartões originais. */
+    .tutorial-card [data-template-id="new-card-category"]{font-size:11px;color:var(--blue);font-weight:700;text-transform:uppercase}
+    .tutorial-card [data-template-id="new-card-title"]{font-size:19px;line-height:1.35;color:var(--ink);font-weight:700}
+    .tutorial-card [data-template-id="new-card-description"]{font-size:14px;color:var(--muted);line-height:1.6}
+    .tutorial-card [data-template-id="new-card-level"],.tutorial-card [data-template-id="new-card-time"]{font-size:12px;background:#edf3f8;color:#45596d}
+    .tutorial-card .open-btn{flex-shrink:0;min-height:57px;font-size:16px;color:var(--blue);font-weight:700;background:#fff}
     .open-btn{display:flex;align-items:center;justify-content:space-between;width:100%;border:0;border-top:1px solid var(--line);padding:16px 22px;background:#fff;color:var(--blue);font-weight:700;text-align:left;cursor:pointer}
     .open-btn:hover{background:#f0f7ff}.detail-shell{padding:42px 0 80px}
     .detail-panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:clamp(22px,4vw,42px);box-shadow:0 17px 50px #1c33400d}
@@ -61,7 +67,7 @@
   <div class="app-wrap">
    <header data-template-id="site-header" class="canva-header site-header" style="background: rgb(255, 255, 255);">
     <div class="page-inner flex flex-wrap items-center justify-between gap-4 py-5"><a href="#inicio" id="brand-link" class="flex items-center gap-3 no-underline" aria-label="Tutoriais de TI — início"> <img data-template-id="brand-logo" class="canva-image brand-mark" loading="lazy" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/book-open.svg" alt="Ícone da marca Tutoriais de TI"> <span data-template-id="brand-name" class="canva-text font-bold" style="color: rgb(23, 38, 56); font-weight: 700; font-style: normal; font-size: 19px;">Base de conhecimento - Operação</span> </a>
-     <nav aria-label="Navegação principal" class="flex flex-wrap items-center gap-4 sm:gap-7"><a data-template-id="nav-categories" class="canva-link nav-link" href="#categorias" style="color: rgb(69, 89, 109); font-weight: 400; font-style: normal; font-size: 16px;">Categorias</a> <a data-template-id="nav-tutorials" class="canva-link nav-link" href="#tutoriais" style="color: rgb(69, 89, 109); font-weight: 400; font-style: normal; font-size: 16px;">Tutoriais</a> <a data-template-id="nav-sites" class="canva-link nav-link" href="#sites-section" style="color: rgb(69, 89, 109); font-weight: 700; font-style: normal; font-size: 16px;">Sites</a> <button type="button" id="nav-create" data-template-id="nav-create-label" class="canva-button primary-btn" style="background: rgb(25, 119, 230); color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">＋ Criar tutorial</button> <button type="button" id="admin-auth" class="canva-button muted-button" style="font-size:14px;">Entrar (admin)</button>
+     <nav aria-label="Navegação principal" class="flex flex-wrap items-center gap-4 sm:gap-7"><a data-template-id="nav-categories" class="canva-link nav-link" href="#categorias" style="color: rgb(69, 89, 109); font-weight: 400; font-style: normal; font-size: 16px;">Categorias</a> <a data-template-id="nav-tutorials" class="canva-link nav-link" href="#tutoriais" style="color: rgb(69, 89, 109); font-weight: 400; font-style: normal; font-size: 16px;">Tutoriais</a> <a data-template-id="nav-sites" class="canva-link nav-link" href="#sites-section" style="color: rgb(69, 89, 109); font-weight: 700; font-style: normal; font-size: 16px;">Links</a> <button type="button" id="nav-create" data-template-id="nav-create-label" class="canva-button primary-btn" style="background: rgb(25, 119, 230); color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">＋ Criar tutorial</button> <button type="button" id="admin-auth" class="canva-button muted-button" style="font-size:14px;">Entrar (admin)</button>
      </nav>
     </div>
    </header>
@@ -149,12 +155,12 @@
     <section id="reader-view" class="page-inner detail-shell" aria-labelledby="reader-title" hidden=""><button type="button" id="reader-back" data-template-id="reader-back-label" class="canva-button muted-button mb-7" style="background: rgb(255, 255, 255); color: rgb(40, 67, 92); font-weight: 700; font-style: normal; font-size: 16px;">← Voltar aos tutoriais</button>
      <article data-template-id="reader-panel" class="canva-panel detail-panel" style="background: rgb(255, 255, 255);">
       <p id="reader-category" class="eyebrow mb-3 text-blue-600"></p>
-      <h1 id="reader-title" class="display-title mb-4"></h1>
+      <h1 id="reader-title" class="display-title mb-4" style="font-size:clamp(30px,4vw,42px);font-weight:700;line-height:1.18"></h1>
       <p id="reader-description" class="text-slate-600 leading-relaxed mb-6"></p>
       <div class="flex flex-wrap gap-3 mb-8">
        <span id="reader-level" class="rounded-full px-4 py-2 bg-blue-50 text-blue-900"></span><span id="reader-time" class="rounded-full px-4 py-2 bg-slate-100 text-slate-700"></span>
       </div>
-      <div id="reader-cover" class="w-full max-h-80 rounded-xl mb-8 bg-center bg-cover" role="img" aria-label="Foto de capa do tutorial" style="height:320px" hidden=""></div>
+      
       <div id="reader-video-wrap" class="mb-9" hidden="">
        <h2 data-template-id="reader-video-heading" class="canva-text display-title mb-4" style="color: rgb(23, 38, 56); font-weight: 700; font-style: normal; font-size: 24px;">Vídeo do tutorial</h2>
        <video id="reader-player" class="video-player" controls="" playsinline=""></video>
@@ -252,17 +258,17 @@
   <div class="canva-panel p-6 md:p-8" style="background:#fff;border-radius:16px">
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div><p class="eyebrow mb-2" style="color:#1977e6;font-weight:700">ATALHOS DA OPERAÇÃO</p>
-      <h2 id="sites-title" class="display-title" style="font-size:28px;font-weight:700">Sites úteis</h2>
-      <p class="mt-2" style="color:#607084">Cadastre e organize links usados no dia a dia.</p></div>
-      <button type="button" id="sites-add" class="canva-button primary-btn" style="background:#1977e6;color:white;font-weight:700;padding:12px 18px;border-radius:8px">+ Adicionar novo site</button>
+      <h2 id="sites-title" class="display-title" style="font-size:28px;font-weight:700">Links úteis</h2>
+      <p class="mt-2" style="color:#607084">Cadastre e organize links usados no dia a dia. Os links ficam salvos no Supabase.</p></div>
+      <button type="button" id="sites-add" class="canva-button primary-btn" style="background:#1977e6;color:white;font-weight:700;padding:12px 18px;border-radius:8px">+ Adicionar link</button>
     </div>
     <form id="sites-form" class="mt-6 grid gap-4 md:grid-cols-2" hidden>
       <input type="hidden" id="site-id">
-      <label class="block font-bold">Nome do site *<input id="site-name" class="canva-input field mt-2" required maxlength="120" placeholder="Ex.: Portal de chamados"></label>
+      <label class="block font-bold">Nome do link *<input id="site-name" class="canva-input field mt-2" required maxlength="120" placeholder="Ex.: Portal de chamados"></label>
       <label class="block font-bold">URL *<input id="site-url" class="canva-input field mt-2" required type="url" placeholder="https://exemplo.com"></label>
       <label class="block font-bold">Categoria<input id="site-category" class="canva-input field mt-2" maxlength="80" placeholder="Ex.: Monitoramento"></label>
       <label class="block font-bold">Descrição<input id="site-description" class="canva-input field mt-2" maxlength="300" placeholder="Para que serve este site"></label>
-      <div class="md:col-span-2 flex flex-wrap gap-3"><button id="site-save" type="submit" class="canva-button primary-btn" style="background:#1977e6;color:white;font-weight:700;padding:10px 16px;border-radius:8px">Salvar site</button><button id="site-cancel" type="button" class="canva-button muted-button" style="padding:10px 16px;border-radius:8px">Cancelar</button></div>
+      <div class="md:col-span-2 flex flex-wrap gap-3"><button id="site-save" type="submit" class="canva-button primary-btn" style="background:#1977e6;color:white;font-weight:700;padding:10px 16px;border-radius:8px">Salvar link</button><button id="site-cancel" type="button" class="canva-button muted-button" style="padding:10px 16px;border-radius:8px">Cancelar</button></div>
     </form>
     <p id="sites-status" class="mt-4" role="status" aria-live="polite"></p>
     <div id="sites-list" class="mt-6 grid gap-4 md:grid-cols-2"></div>
@@ -534,8 +540,6 @@
     $('reader-category').textContent=categories[item.category] || categories.other;
     $('reader-title').textContent=item.title;$('reader-description').textContent=item.description;
     $('reader-level').textContent=item.level;$('reader-time').textContent=item.time;
-    $('reader-cover').hidden=!item.cover;$('reader-cover').style.backgroundImage='';
-    if(item.cover){const url=await mediaUrl(item.cover);if(url) $('reader-cover').style.backgroundImage=`url("${url}")`;}
     $('reader-video-wrap').hidden=!item.video;$('reader-player').src=await mediaUrl(item.video) || '';
     $('reader-steps').replaceChildren();
     for(const [index,step] of item.steps.entries()){
@@ -682,16 +686,16 @@
     list.innerHTML = sites.length ? sites.map(site => `<article class="canva-card p-5" style="border:1px solid #dce5ed;border-radius:12px;background:#fff">
       <div class="flex items-start justify-between gap-3"><div><h3 style="font-weight:700;font-size:18px">${esc(site.name)}</h3><p class="mt-1" style="color:#607084;font-size:13px">${esc(site.category||'Sem categoria')}</p></div></div>
       ${site.description?`<p class="mt-3" style="color:#45596d">${esc(site.description)}</p>`:''}
-      <div class="mt-4 flex flex-wrap gap-3"><a href="${esc(site.url)}" target="_blank" rel="noopener noreferrer" class="canva-button primary-btn" style="background:#1977e6;color:white;padding:9px 14px;border-radius:8px;text-decoration:none">Abrir site ↗</a>
-      <button type="button" data-edit="${esc(site.id)}" class="canva-button muted-button" style="padding:9px 14px;border-radius:8px">Editar</button><button type="button" data-delete="${esc(site.id)}" class="canva-button muted-button" style="padding:9px 14px;border-radius:8px">Excluir</button></div></article>`).join('') : '<p style="color:#607084">Nenhum site cadastrado ainda. Clique em “Adicionar novo site” para começar.</p>';
+      <div class="mt-4 flex flex-wrap gap-3"><a href="${esc(site.url)}" target="_blank" rel="noopener noreferrer" class="canva-button primary-btn" style="background:#1977e6;color:white;padding:9px 14px;border-radius:8px;text-decoration:none">Abrir link ↗</a>
+      <button type="button" data-edit="${esc(site.id)}" class="canva-button muted-button" style="padding:9px 14px;border-radius:8px">Editar</button><button type="button" data-delete="${esc(site.id)}" class="canva-button muted-button" style="padding:9px 14px;border-radius:8px">Excluir</button></div></article>`).join('') : '<p style="color:#607084">Nenhum link cadastrado ainda. Clique em “Adicionar link” para começar.</p>';
   }
   async function load(){
     if (!window.supabaseClient) { say('A conexão com o Supabase não foi inicializada nesta página.',true); return; }
-    say('Carregando sites...');
+    say('Carregando links...');
     try {
       const {data,error}=await window.supabaseClient.from('sites').select('*').order('created_at',{ascending:false});
       if(error) throw error;
-      sites=data||[];render();say(`${sites.length} site(s) carregado(s).`);
+      sites=data||[];render();say(`${sites.length} link(s) carregado(s).`);
     } catch(e) { console.error('Erro ao carregar sites do Supabase:',e);say(`Erro ao carregar sites: ${e.message || e.code || 'falha desconhecida'}. Verifique a tabela public.sites e as políticas RLS no Supabase.`,true); }
   }
   $('sites-add').addEventListener('click',()=>{form.reset();$('site-id').value='';form.hidden=false;$('sites-add').hidden=true;$('site-name').focus();});
@@ -707,9 +711,10 @@
       const {data:{session},error:sessionError}=await window.supabaseClient.auth.getSession();
       if(sessionError) throw sessionError;
       if(!session){say('Para cadastrar ou alterar sites, entre primeiro como administrador pelo botão “Entrar (admin)”.',true);return;}
-      const result=id ? await window.supabaseClient.from('sites').update(payload).eq('id',id) : await window.supabaseClient.from('sites').insert(payload);
+      const result=id ? await window.supabaseClient.from('sites').update(payload).eq('id',id).select('id') : await window.supabaseClient.from('sites').insert(payload).select('id');
       if(result.error) throw result.error;
-      resetForm();await load();say('Site salvo na base de dados com sucesso.');
+      if(!result.data?.length) throw new Error('Nenhum registro foi salvo. Confira as permissões RLS do Supabase.');
+      resetForm();await load();say('Link salvo no Supabase com sucesso.');
     } catch(err) {console.error('Erro ao salvar site no Supabase:',err);say(`Falha ao salvar site: ${err.message || err.code || 'erro desconhecido'}. Confira a tabela public.sites e as políticas RLS no Supabase.`,true);}
     finally {$('site-save').disabled=false;}
   });
@@ -719,7 +724,7 @@
       $('site-id').value=site.id;$('site-name').value=site.name||'';$('site-url').value=site.url||'';$('site-category').value=site.category||'';$('site-description').value=site.description||'';form.hidden=false;$('sites-add').hidden=true;$('site-name').focus();return;}
     if(del){const site=sites.find(x=>String(x.id)===del.dataset.delete);if(!site||!confirm(`Excluir o site "${site.name}"?`))return;
       say('Excluindo site...');
-      try{const {data:{session},error:sessionError}=await window.supabaseClient.auth.getSession();if(sessionError)throw sessionError;if(!session){say('Entre como administrador para excluir sites.',true);return;}const {error}=await window.supabaseClient.from('sites').delete().eq('id',site.id);if(error)throw error;await load();say('Site excluído.');}
+      try{const {data:{session},error:sessionError}=await window.supabaseClient.auth.getSession();if(sessionError)throw sessionError;if(!session){say('Entre como administrador para excluir sites.',true);return;}const {error}=await window.supabaseClient.from('sites').delete().eq('id',site.id).select('id');if(error)throw error;await load();say('Link excluído.');}
       catch(err){console.error('Erro ao excluir site:',err);say(`Falha ao excluir site: ${err.message || err.code || 'erro desconhecido'}.`,true);}
     }
   });
