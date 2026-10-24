@@ -537,7 +537,7 @@
   }
   async function reader(id){
     const item=records.get(id);if(!item || item.deleted)return;activeId=id;
-    $('reader-delete').hidden=false;$('reader-delete-confirm').hidden=true;$('reader-delete-cancel').hidden=true;$('reader-status').hidden=true;
+    $('reader-edit').hidden=!adminSession;$('reader-delete').hidden=!adminSession;$('reader-delete-confirm').hidden=true;$('reader-delete-cancel').hidden=true;$('reader-status').hidden=true;
     $('reader-category').textContent=categories[item.category] || categories.other;
     $('reader-title').textContent=item.title;$('reader-description').textContent=item.description;
     $('reader-level').textContent=item.level;$('reader-time').textContent=item.time;
