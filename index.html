@@ -936,4 +936,39 @@
 })();
 </script>
 
+<script>
+(function(){
+  var nav=document.querySelector('nav[aria-label="Navegação principal"]');
+  var home=document.getElementById('home-view');
+  if(!nav||!home)return;
+  var hero=home.querySelector('.hero');
+  var search=home.querySelector('.search-panel');
+  var controls=document.getElementById('section-visibility-controls');
+  var targets={'#categorias':'tutorials','#tutoriais':'tutorials','#sites-section':'links','#partners-section':'partners'};
+  var sections={tutorials:['categorias','tutoriais'],links:['sites-section'],partners:['partners-section']};
+  function show(view){
+    if(!sections[view])view='tutorials';
+    if(hero)hero.hidden=true;
+    if(search)search.hidden=view!=='tutorials';
+    if(controls)controls.hidden=true;
+    Object.keys(sections).forEach(function(k){sections[k].forEach(function(id){var el=document.getElementById(id);if(el)el.hidden=true;});});
+    sections[view].forEach(function(id){var el=document.getElementById(id);if(el)el.hidden=false;});
+    nav.querySelectorAll('a[href]').forEach(function(a){
+      var active=targets[a.getAttribute('href')]===view;
+      a.setAttribute('aria-current',active?'page':'false');
+      a.style.fontWeight=active?'700':'400';
+      a.style.color=active?'#1977e6':'#45596d';
+    });
+    var hash=view==='links'?'#sites-section':view==='partners'?'#partners-section':'#tutoriais';
+    history.replaceState(null,'',hash);
+  }
+  nav.querySelectorAll('a[href]').forEach(function(a){
+    var view=targets[a.getAttribute('href')];
+    if(!view)return;
+    a.addEventListener('click',function(e){e.preventDefault();show(view);window.scrollTo({top:0,behavior:'smooth'});});
+  });
+  show('tutorials');
+})();
+</script>
+
 </body></html>
