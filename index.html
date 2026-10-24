@@ -88,6 +88,15 @@
        </form>
       </section>
       <p id="library-status" class="status mt-5" role="status" hidden=""></p>
+      <section id="section-visibility-controls" class="canva-panel mt-6 p-4" aria-label="Mostrar ou ocultar seções" style="background:#fff;border:1px solid #dce5ed;border-radius:12px">
+       <p class="font-bold mb-3" style="color:#172638">Personalizar o que aparece na página</p>
+       <div class="flex flex-wrap gap-3">
+        <button type="button" data-toggle-section="tutorials" aria-pressed="false" class="canva-button muted-button" style="padding:9px 14px;border-radius:8px">Ocultar tutoriais</button>
+        <button type="button" data-toggle-section="links" aria-pressed="false" class="canva-button muted-button" style="padding:9px 14px;border-radius:8px">Ocultar links úteis</button>
+        <button type="button" data-toggle-section="partners" aria-pressed="false" class="canva-button muted-button" style="padding:9px 14px;border-radius:8px">Ocultar parceiros / escalonamento</button>
+       </div>
+       <p class="mt-2" style="color:#607084;font-size:13px">As seções ocultas podem ser reexibidas pelos mesmos botões. A preferência fica salva neste navegador.</p>
+      </section>
       <section id="categorias" class="py-16" aria-labelledby="categories-title">
        <p data-template-id="categories-kicker" class="canva-text eyebrow mb-2" style="color: rgb(25, 119, 230); font-weight: 700; font-style: normal; font-size: 12px;">ENCONTRE SEU CAMINHO</p>
        <h2 id="categories-title" data-template-id="categories-title" class="canva-text display-title mb-8" style="color: rgb(23, 38, 56); font-weight: 700; font-style: normal; font-size: 24px;">Explore por categoria</h2>
@@ -885,6 +894,45 @@
   });
   const nav=document.querySelector('a[href="#partners-section"]');if(nav)nav.addEventListener('click',()=>setTimeout(load,100));
   load();
+})();
+</script>
+
+
+<script>
+(() => {
+  const sections = {
+    tutorials: ['categorias', 'tutoriais'],
+    links: ['sites-section'],
+    partners: ['partners-section']
+  };
+  const labels = {
+    tutorials: ['Ocultar tutoriais', 'Mostrar tutoriais'],
+    links: ['Ocultar links úteis', 'Mostrar links úteis'],
+    partners: ['Ocultar parceiros / escalonamento', 'Mostrar parceiros / escalonamento']
+  };
+  function setSection(key, hidden) {
+    (sections[key] || []).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.hidden = hidden;
+    });
+    const button = document.querySelector('[data-toggle-section="' + key + '"]');
+    if (button) {
+      button.textContent = labels[key][hidden ? 1 : 0];
+      button.setAttribute('aria-pressed', String(hidden));
+      button.setAttribute('aria-label', labels[key][hidden ? 1 : 0]);
+    }
+    try { localStorage.setItem('base-conhecimento-section-' + key, hidden ? 'hidden' : 'visible'); } catch (_) {}
+  }
+  document.querySelectorAll('[data-toggle-section]').forEach(button => {
+    const key = button.dataset.toggleSection;
+    let hidden = false;
+    try { hidden = localStorage.getItem('base-conhecimento-section-' + key) === 'hidden'; } catch (_) {}
+    setSection(key, hidden);
+    button.addEventListener('click', () => {
+      const nextHidden = button.getAttribute('aria-pressed') !== 'true';
+      setSection(key, nextHidden);
+    });
+  });
 })();
 </script>
 
