@@ -431,6 +431,8 @@
     const {data:{session}} = await window.supabaseClient.auth.getSession();
     adminSession = session;
     window.adminSession = session;
+    const createTutorialButton = $('section-create');
+    if (createTutorialButton) createTutorialButton.style.display = session ? 'inline-flex' : 'none';
     window.dispatchEvent(new CustomEvent('admin-state-changed'));
     $('admin-auth').textContent = session ? 'Sair do admin' : 'Entrar (admin)';
   }
