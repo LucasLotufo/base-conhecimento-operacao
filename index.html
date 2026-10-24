@@ -450,7 +450,7 @@
   refreshAdminState();
 
   function notice(id,message,error=false){const el=$(id);el.textContent=message;el.classList.toggle('error',error);el.hidden=false}
-  function show(view){views.forEach(id=>$(id).hidden=id!==view);$('sites-section').hidden=view!=='home-view';$('partners-section').hidden=view!=='home-view';window.scrollTo({top:0,behavior:'smooth'})}
+  function show(view){views.forEach(id=>$(id).hidden=id!==view);const homeVisible=view==='home-view';$('sites-section').hidden=!homeVisible||localStorage.getItem('base-conhecimento-section-links')==='hidden';$('partners-section').hidden=!homeVisible||localStorage.getItem('base-conhecimento-section-partners')==='hidden';window.scrollTo({top:0,behavior:'smooth'})}
   function normalizeStep(step){return typeof step==='string'?{text:step,image:''}:{text:String(step?.text ?? ''),image:typeof step?.image==='string'?step.image:''}}
   function decode(row){
     let payload={};
