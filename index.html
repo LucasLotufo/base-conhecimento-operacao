@@ -67,7 +67,7 @@
   <div class="app-wrap">
    <header data-template-id="site-header" class="canva-header site-header" style="background: rgb(255, 255, 255);">
     <div class="page-inner flex flex-wrap items-center justify-between gap-4 py-5"><a href="#inicio" id="brand-link" class="flex items-center gap-3 no-underline" aria-label="Tutoriais de TI — início"> <img data-template-id="brand-logo" class="canva-image brand-mark" loading="lazy" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/book-open.svg" alt="Ícone da marca Tutoriais de TI"> <span data-template-id="brand-name" class="canva-text font-bold" style="color: rgb(23, 38, 56); font-weight: 700; font-style: normal; font-size: 19px;">Base de conhecimento - Operação</span> </a>
-     <nav aria-label="Navegação principal" class="flex flex-wrap items-center gap-4 sm:gap-7"><a data-template-id="nav-categories" class="canva-link nav-link" href="#categorias" style="color: rgb(69, 89, 109); font-weight: 400; font-style: normal; font-size: 16px;">Categorias</a> <a data-template-id="nav-tutorials" class="canva-link nav-link" href="#tutoriais" style="color: rgb(69, 89, 109); font-weight: 400; font-style: normal; font-size: 16px;">Tutoriais</a> <a data-template-id="nav-sites" class="canva-link nav-link" href="#sites-section" style="color: rgb(69, 89, 109); font-weight: 700; font-style: normal; font-size: 16px;">Links</a> <button type="button" id="nav-create" data-template-id="nav-create-label" class="canva-button primary-btn" style="background: rgb(25, 119, 230); color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">＋ Criar tutorial</button> <button type="button" id="admin-auth" class="canva-button muted-button" style="font-size:14px;">Entrar (admin)</button>
+     <nav aria-label="Navegação principal" class="flex flex-wrap items-center gap-4 sm:gap-7"><a data-template-id="nav-categories" class="canva-link nav-link" href="#categorias" style="color: rgb(69, 89, 109); font-weight: 400; font-style: normal; font-size: 16px;">Categorias</a> <a data-template-id="nav-tutorials" class="canva-link nav-link" href="#tutoriais" style="color: rgb(69, 89, 109); font-weight: 400; font-style: normal; font-size: 16px;">Tutoriais</a> <a data-template-id="nav-sites" class="canva-link nav-link" href="#sites-section" style="color: rgb(69, 89, 109); font-weight: 700; font-style: normal; font-size: 16px;">Links</a> <a class="canva-link nav-link" href="#partners-section" style="color: rgb(69, 89, 109); font-weight: 400; font-style: normal; font-size: 16px;">Parceiros</a> <button type="button" id="nav-create" data-template-id="nav-create-label" class="canva-button primary-btn" style="background: rgb(25, 119, 230); color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">＋ Criar tutorial</button> <button type="button" id="admin-auth" class="canva-button muted-button" style="font-size:14px;">Entrar (admin)</button>
      </nav>
     </div>
    </header>
@@ -275,6 +275,28 @@
     <p id="sites-status" class="mt-4" role="status" aria-live="polite"></p>
     <div id="sites-list" class="mt-6 grid gap-4 md:grid-cols-2"></div>
   </div>
+
+<section id="partners-section" class="page-inner py-16" aria-labelledby="partners-title">
+  <div class="canva-panel p-6 md:p-8" style="background:#fff;border-radius:16px">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div><p class="eyebrow mb-2" style="color:#1977e6;font-weight:700">CONTATOS DA OPERAÇÃO</p>
+      <h2 id="partners-title" class="display-title" style="font-size:28px;font-weight:700">Parceiros e escalonamento</h2>
+      <p class="mt-2" style="color:#607084">Cadastre parceiros e mantenha vários contatos por parceiro, incluindo e-mail, telefone e nível de escalonamento.</p></div>
+      <button type="button" id="partners-add" class="canva-button primary-btn" style="background:#1977e6;color:white;font-weight:700;padding:12px 18px;border-radius:8px" hidden>+ Adicionar parceiro</button>
+    </div>
+    <form id="partners-form" class="mt-6 grid gap-4" hidden>
+      <input type="hidden" id="partner-id">
+      <label class="block font-bold">Nome do parceiro / empresa *<input id="partner-name" class="canva-input field mt-2" required maxlength="150" placeholder="Ex.: Empresa de telecomunicações"></label>
+      <label class="block font-bold">Descrição do parceiro<textarea id="partner-description" class="canva-input field mt-2" rows="2" maxlength="1000" placeholder="Serviços prestados, contrato, observações..."></textarea></label>
+      <div class="flex flex-wrap items-center justify-between gap-3"><h3 class="font-bold" style="font-size:19px">Contatos do parceiro</h3><button type="button" id="partner-contact-add" class="canva-button muted-button" style="padding:9px 14px;border-radius:8px">+ Adicionar contato</button></div>
+      <div id="partner-contacts-form" class="grid gap-4"></div>
+      <div class="flex flex-wrap gap-3"><button id="partner-save" type="submit" class="canva-button primary-btn" style="background:#1977e6;color:white;font-weight:700;padding:10px 16px;border-radius:8px">Salvar parceiro</button><button id="partner-cancel" type="button" class="canva-button muted-button" style="padding:10px 16px;border-radius:8px">Cancelar</button></div>
+    </form>
+    <label for="partners-search" class="block mt-6 font-bold">Pesquisar parceiros</label>
+    <input id="partners-search" type="search" class="canva-input field mt-2" placeholder="Pesquisar por parceiro, contato, e-mail, telefone ou nível..." autocomplete="off">
+    <p id="partners-status" class="mt-4" role="status" aria-live="polite"></p>
+    <div id="partners-list" class="mt-6 grid gap-4 md:grid-cols-2"></div>
+  </div>
 </section>
 
    <footer id="site-footer" data-template-id="site-footer" class="canva-footer" style="background: rgb(16, 29, 44);">
@@ -418,7 +440,7 @@
   refreshAdminState();
 
   function notice(id,message,error=false){const el=$(id);el.textContent=message;el.classList.toggle('error',error);el.hidden=false}
-  function show(view){views.forEach(id=>$(id).hidden=id!==view);$('sites-section').hidden=view!=='home-view';window.scrollTo({top:0,behavior:'smooth'})}
+  function show(view){views.forEach(id=>$(id).hidden=id!==view);$('sites-section').hidden=view!=='home-view';$('partners-section').hidden=view!=='home-view';window.scrollTo({top:0,behavior:'smooth'})}
   function normalizeStep(step){return typeof step==='string'?{text:step,image:''}:{text:String(step?.text ?? ''),image:typeof step?.image==='string'?step.image:''}}
   function decode(row){
     let payload={};
@@ -781,6 +803,86 @@
   if(nav) nav.addEventListener('click',()=>setTimeout(load,100));
   $('sites-add').addEventListener('click',()=>{});
   // Supabase client created by the original app is exposed for this section only.
+  load();
+})();
+</script>
+
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const form=$('partners-form'), list=$('partners-list'), status=$('partners-status'), contactsForm=$('partner-contacts-form');
+  if(!form||!list||!contactsForm)return;
+  let partners=[];
+  const say=(message,bad=false)=>{status.textContent=message;status.style.color=bad?'#b42318':'#607084';};
+  const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const isAdmin=()=>!!window.adminSession;
+  function contactCard(contact={}) {
+    const card=document.createElement('div');card.className='partner-contact-card canva-card p-4';card.style.cssText='border:1px solid #dce5ed;border-radius:12px;background:#f8fafc';
+    card.innerHTML=`<div class="flex items-center justify-between gap-3 mb-3"><strong>Contato</strong><button type="button" data-remove-contact class="canva-button muted-button" style="padding:6px 10px;border-radius:8px">Remover</button></div>
+      <div class="grid gap-3 md:grid-cols-2">
+      <label class="block font-bold">Nome da pessoa *<input data-contact-field="name" class="canva-input field mt-2" required maxlength="120" placeholder="Nome do contato" value="${esc(contact.name)}"></label>
+      <label class="block font-bold">Nível de escalonamento<select data-contact-field="level" class="canva-input field mt-2"><option value="">Não definido</option><option value="Nível 1">Nível 1</option><option value="Nível 2">Nível 2</option><option value="Nível 3">Nível 3</option><option value="Gestão">Gestão</option><option value="Plantão">Plantão</option></select></label>
+      <label class="block font-bold">E-mail<input data-contact-field="email" type="email" class="canva-input field mt-2" maxlength="180" placeholder="contato@empresa.com" value="${esc(contact.email)}"></label>
+      <label class="block font-bold">Telefone<input data-contact-field="phone" type="tel" class="canva-input field mt-2" maxlength="60" placeholder="+55 (11) 99999-9999" value="${esc(contact.phone)}"></label>
+      <label class="block font-bold md:col-span-2">Descrição / quando acionar<textarea data-contact-field="description" class="canva-input field mt-2" rows="2" maxlength="500" placeholder="Responsabilidade, horário, motivo do contato...">${esc(contact.description)}</textarea></label>
+      </div>`;
+    card.querySelector('[data-contact-field="level"]').value=contact.level||'';
+    return card;
+  }
+  function addContact(contact={}){contactsForm.appendChild(contactCard(contact));}
+  function resetForm(){form.reset();$('partner-id').value='';contactsForm.innerHTML='';form.hidden=true;$('partners-add').hidden=!isAdmin();}
+  function getContacts(){return [...contactsForm.querySelectorAll('.partner-contact-card')].map(card=>{const value=key=>card.querySelector(`[data-contact-field="${key}"]`).value.trim();return{name:value('name'),level:value('level'),email:value('email'),phone:value('phone'),description:value('description')}});}
+  function render(){
+    $('partners-add').hidden=!isAdmin();
+    const query=($('partners-search').value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+    const filtered=partners.filter(p=>JSON.stringify(p).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(query));
+    list.innerHTML=filtered.length?filtered.map(p=>`<article class="canva-card p-5" style="border:1px solid #dce5ed;border-radius:12px;background:#fff">
+      <div class="flex items-start justify-between gap-3"><div><h3 style="font-weight:700;font-size:19px">${esc(p.name)}</h3>${p.description?`<p class="mt-2" style="color:#45596d;white-space:pre-wrap">${esc(p.description)}</p>`:''}</div>
+      ${isAdmin()?`<div class="flex flex-wrap gap-2"><button type="button" data-partner-edit="${esc(p.id)}" class="canva-button muted-button" style="padding:7px 10px;border-radius:8px">Editar</button><button type="button" data-partner-delete="${esc(p.id)}" class="canva-button muted-button" style="padding:7px 10px;border-radius:8px">Excluir</button></div>`:''}</div>
+      <div class="mt-4 grid gap-3">${(Array.isArray(p.contacts)?p.contacts:[]).map(ct=>`<div style="background:#f3f6f8;border-radius:10px;padding:12px"><div class="flex flex-wrap items-center gap-2"><strong>${esc(ct.name||'Contato')}</strong>${ct.level?`<span style="font-size:12px;background:#dcecff;color:#174d83;border-radius:999px;padding:3px 8px">${esc(ct.level)}</span>`:''}</div>
+      ${ct.email?`<p class="mt-2">E-mail: <a href="mailto:${esc(ct.email)}" style="color:#1977e6">${esc(ct.email)}</a></p>`:''}
+      ${ct.phone?`<p class="mt-1">Telefone: <a href="tel:${esc(ct.phone.replace(/[^+\d]/g,''))}" style="color:#1977e6">${esc(ct.phone)}</a></p>`:''}
+      ${ct.description?`<p class="mt-2" style="color:#45596d;white-space:pre-wrap">${esc(ct.description)}</p>`:''}</div>`).join('')||'<p style="color:#607084">Nenhum contato cadastrado.</p>'}</div></article>`).join(''):`<p style="color:#607084">${query?'Nenhum parceiro encontrado para essa pesquisa.':'Nenhum parceiro cadastrado ainda.'}</p>`;
+  }
+  async function load(){
+    if(!window.supabaseClient){say('A conexão com o Supabase não foi inicializada.',true);return;}
+    say('Carregando parceiros...');
+    try{const {data,error}=await window.supabaseClient.from('partners').select('*').order('created_at',{ascending:false});if(error)throw error;partners=data||[];render();say(`${partners.length} parceiro(s) carregado(s).`);}
+    catch(e){console.error('Erro ao carregar parceiros:',e);say(`Não foi possível carregar parceiros. Confira se a tabela public.partners foi criada e se as políticas RLS estão configuradas. Detalhe: ${e.message||e.code||'erro desconhecido'}`,true);}
+  }
+  $('partners-add').addEventListener('click',()=>{form.reset();$('partner-id').value='';contactsForm.innerHTML='';addContact();form.hidden=false;$('partners-add').hidden=true;$('partner-name').focus();});
+  $('partner-contact-add').addEventListener('click',()=>addContact());
+  contactsForm.addEventListener('click',e=>{if(e.target.closest('[data-remove-contact]')){e.target.closest('.partner-contact-card').remove();}});
+  $('partner-cancel').addEventListener('click',resetForm);
+  $('partners-search').addEventListener('input',render);
+  window.addEventListener('admin-state-changed',render);
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    if(!isAdmin()){say('Entre como administrador para cadastrar ou alterar parceiros.',true);return;}
+    const name=$('partner-name').value.trim(), contacts=getContacts();
+    if(!name){say('Informe o nome do parceiro.',true);return;}
+    if(contacts.some(ct=>!ct.name)){say('Preencha o nome de cada contato ou remova o contato vazio.',true);return;}
+    const payload={name,description:$('partner-description').value.trim(),contacts};
+    const id=$('partner-id').value;$('partner-save').disabled=true;say('Salvando parceiro...');
+    try{const {data:{session},error:se}=await window.supabaseClient.auth.getSession();if(se)throw se;if(!session)throw new Error('Entre como administrador antes de salvar.');
+      const result=id?await window.supabaseClient.from('partners').update(payload).eq('id',id).select('id'):await window.supabaseClient.from('partners').insert(payload).select('id');
+      if(result.error)throw result.error;if(!result.data?.length)throw new Error('Nenhum registro foi salvo. Confira as permissões RLS.');
+      resetForm();await load();say('Parceiro salvo com sucesso.');
+    }catch(err){console.error(err);say(`Falha ao salvar parceiro: ${err.message||err.code||'erro desconhecido'}`,true);}
+    finally{$('partner-save').disabled=false;}
+  });
+  list.addEventListener('click',async e=>{
+    const edit=e.target.closest('[data-partner-edit]'),del=e.target.closest('[data-partner-delete]');
+    if(edit){if(!isAdmin()){say('Entre como administrador para editar parceiros.',true);return;}const p=partners.find(x=>String(x.id)===edit.dataset.partnerEdit);if(!p)return;
+      $('partner-id').value=p.id;$('partner-name').value=p.name||'';$('partner-description').value=p.description||'';contactsForm.innerHTML='';(Array.isArray(p.contacts)&&p.contacts.length?p.contacts:[{}]).forEach(ct=>addContact(ct));form.hidden=false;$('partners-add').hidden=true;$('partner-name').focus();return;}
+    if(del){if(!isAdmin()){say('Entre como administrador para excluir parceiros.',true);return;}const p=partners.find(x=>String(x.id)===del.dataset.partnerDelete);if(!p||!confirm(`Excluir o parceiro "${p.name}" e seus contatos?`))return;
+      try{const {data:{session},error:se}=await window.supabaseClient.auth.getSession();if(se)throw se;if(!session)throw new Error('Entre como administrador para excluir parceiros.');
+        const {error}=await window.supabaseClient.from('partners').delete().eq('id',p.id);if(error)throw error;await load();say('Parceiro excluído.');}
+      catch(err){say(`Falha ao excluir parceiro: ${err.message||err.code||'erro desconhecido'}`,true);}
+    }
+  });
+  const nav=document.querySelector('a[href="#partners-section"]');if(nav)nav.addEventListener('click',()=>setTimeout(load,100));
   load();
 })();
 </script>
