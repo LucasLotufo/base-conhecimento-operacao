@@ -2,7 +2,13 @@
 <html lang="pt-BR"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tutoriais de TI</title>
+  <title>Biblioteca de Conhecimento</title>
+<style>
+#access-gate{position:fixed;inset:0;z-index:2147483647;background:#f3f6f8;display:grid;place-items:center;padding:18px;font:16px system-ui,sans-serif;color:#172638;overflow:auto}
+#access-gate .access-box{background:#fff;border:1px solid #dce5ed;border-radius:18px;padding:32px;width:min(100%,440px);box-shadow:0 20px 60px #101d2c20}
+#access-gate input{display:block;width:100%;padding:13px;margin:12px 0;border:1px solid #aab8c7;border-radius:8px}
+#access-gate button{padding:12px 16px;background:#1977e6;color:#fff;border:0;border-radius:8px;cursor:pointer}
+</style>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:wght@600;700&amp;display=swap" rel="stylesheet">
   <style>
     :root{--navy:#101d2c;--ink:#172638;--muted:#607084;--blue:#1977e6;--line:#dce5ed;--paper:#f3f6f8}
@@ -78,6 +84,8 @@
   <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
  </head>
  <body data-template-id="__page-root" style="background: rgb(243, 246, 248);">
+<div id="access-gate" role="main"><div class="access-box"><h1>Biblioteca de Conhecimento</h1><p>Entre com seu usuário e senha para acessar.</p><form id="access-form"><input name="email" type="email" placeholder="Usuário (e-mail)" autocomplete="username" required><input name="password" type="password" placeholder="Senha" autocomplete="current-password" required><button type="submit">Entrar</button></form><p>Carregando autenticação...</p></div></div>
+
   <div class="app-wrap">
    <header data-template-id="site-header" class="canva-header site-header" style="background: rgb(255, 255, 255);">
     <div class="page-inner flex flex-wrap items-center justify-between gap-4 py-5"><a href="#inicio" id="brand-link" class="flex items-center gap-3 no-underline" aria-label="Tutoriais de TI — início"> <img data-template-id="brand-logo" class="canva-image brand-mark" loading="lazy" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/book-open.svg" alt="Ícone da marca Tutoriais de TI"> <span data-template-id="brand-name" class="canva-text font-bold" style="color: rgb(23, 38, 56); font-weight: 700; font-style: normal; font-size: 19px;">Biblioteca de Conhecimento</span> </a>
@@ -1004,12 +1012,12 @@ html.access-approved #access-gate{display:none}
 .access-box li{padding:10px 0;border-bottom:1px solid #eee;list-style:none}
 `;
 document.head.append(style);
-const gate=document.createElement('div');gate.id='access-gate';document.body.append(gate);
+const gate=document.getElementById('access-gate');
 const escapeHtml=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const screen=(html)=>{document.documentElement.classList.remove('access-approved');gate.innerHTML='<div class="access-box">'+html+'</div>';};
 const msg=(s,error=false)=>{const e=gate.querySelector('#access-message');if(e){e.textContent=s;e.className=error?'error':'success';}};
 function login(mode='login'){
-screen('<h1>Base Lotufo</h1><p>'+(mode==='signup'?'Crie sua conta para solicitar acesso.':'Entre para acessar os tutoriais.')+'</p><form id="access-form">'+(mode==='signup'?'<input name="name" placeholder="Nome de usuário" maxlength="80" required>':'')+'<input name="email" type="email" autocomplete="email" placeholder="E-mail" required><input name="password" type="password" minlength="6" autocomplete="'+(mode==='signup'?'new-password':'current-password')+'" placeholder="Senha" required><button type="submit">'+(mode==='signup'?'Solicitar cadastro':'Entrar')+'</button></form><button class="secondary" id="access-toggle">'+(mode==='signup'?'Já tenho conta':'Criar conta')+'</button><p id="access-message" role="status"></p>');
+screen('<h1>Biblioteca de Conhecimento</h1><p>'+(mode==='signup'?'Crie sua conta para solicitar acesso.':'Entre para acessar os tutoriais.')+'</p><form id="access-form">'+(mode==='signup'?'<input name="name" placeholder="Nome de usuário" maxlength="80" required>':'')+'<input name="email" type="email" autocomplete="email" placeholder="E-mail" required><input name="password" type="password" minlength="6" autocomplete="'+(mode==='signup'?'new-password':'current-password')+'" placeholder="Senha" required><button type="submit">'+(mode==='signup'?'Solicitar cadastro':'Entrar')+'</button></form><button class="secondary" id="access-toggle">'+(mode==='signup'?'Já tenho conta':'Criar conta')+'</button><p id="access-message" role="status"></p>');
 gate.querySelector('#access-toggle').onclick=()=>login(mode==='signup'?'login':'signup');
 gate.querySelector('form').onsubmit=async e=>{e.preventDefault();const form=e.currentTarget;const b=form.querySelector('button');b.disabled=true;
 try{if(!db)throw Error('Supabase não está configurado.');const email=form.elements.namedItem('email').value.trim(),password=form.elements.namedItem('password').value;
@@ -1041,7 +1049,7 @@ gate.querySelectorAll('[data-user]').forEach(button=>button.onclick=async()=>{bu
 };
 }
 if(db)db.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){document.documentElement.classList.remove('access-approved');login();}});
-check();
+login();
 })();
 </script>
 </body></html>
